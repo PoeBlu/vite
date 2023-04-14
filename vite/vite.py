@@ -47,7 +47,7 @@ def create_project(path):
         os.mkdir(os.path.join(path, 'static'))
         create_config(path)
         create_template(path)
-        print(good('Created project directory at %s.' % (abs_path)))
+        print(good(f'Created project directory at {abs_path}.'))
     except FileExistsError:
         print(bad('Error: specified path exists.'))
 
@@ -91,15 +91,16 @@ def jinja_render(html_text, tmpl):
     template_loader = jinja2.FileSystemLoader('./')
     env = jinja2.Environment(loader=template_loader)
     try:
-        template = env.get_template(tmpl)    
-        output = template.render(title=config.title,
-                             author=config.author,
-                             header=config.header,
-                             footer=config.footer,
-                             body=html_text)
-        return output
+        template = env.get_template(tmpl)
+        return template.render(
+            title=config.title,
+            author=config.author,
+            header=config.header,
+            footer=config.footer,
+            body=html_text,
+        )
     except jinja2.exceptions.TemplateNotFound:
-        print(bad('Error: specified template not found: %s' % (tmpl)))
+        print(bad(f'Error: specified template not found: {tmpl}'))
         sys.exit(1)
 
 
@@ -112,8 +113,7 @@ def fm_template(metadata):
 
 
 def markdown_render(filename):
-    html_text = markdown_path(os.path.join(PAGES_PATH, filename), extras=['metadata'])
-    return html_text
+    return markdown_path(os.path.join(PAGES_PATH, filename), extras=['metadata'])
 
 
 def html_gen():
